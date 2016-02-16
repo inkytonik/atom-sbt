@@ -50,6 +50,11 @@ The Atom command will be given a name based on the sbt command.
 For example, if the sbt command is "test" then the Atom command will be  `sbt:test` and it will appear in the command palette as "Sbt: Test".
 Thus, you can invoke the command via the palette, or more usefully, map a key to it.
 
+Some name mangling is performed when the Atom command is created for the history commands or for new user commands.
+Specifically, colons are replaced with hyphens in Atom command names since colon has a special meaning to Atom.
+Colons will be replaced by spaces in the palette string for the command.
+E.g., if the sbt command is "test:compile" then the corresponding Atom command name will be `sbt:test-compile` and it will appear in the palette as "Sbt: Test Compile".
+
 See the Key Bindings section of the package settings for the bindings that invoke the default sbt command list.
 
 ## Error handling
