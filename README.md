@@ -1,4 +1,4 @@
-# sbt
+# atom-sbt
 
 An Atom interface to the Scala Build Tool (sbt).
 
