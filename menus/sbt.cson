@@ -1,0 +1,45 @@
+'context-menu':
+  'atom-text-editor': [
+    {
+      'label': 'Toggle sbt'
+      'command': 'sbt:toggle'
+    }
+  ]
+'menu': [
+  {
+    'label': 'Packages'
+    'submenu': [
+      'label': 'Scala Build Tool'
+      'submenu': [
+        {
+          'label': 'Compile'
+          'command': 'sbt:compile'
+        }
+        {
+          'label': 'Clean'
+          'command': 'sbt:clean'
+        }
+        {
+          'label': 'Exit'
+          'command': 'sbt:exit'
+        }
+        {
+          'label': 'Run'
+          'command': 'sbt:run'
+        }
+        {
+          'label': 'Run Last Command'
+          'command': 'sbt:run-last-command'
+        }
+        {
+          'label': 'Test'
+          'command': 'sbt:test'
+        }
+        {
+          'label': 'Toggle Panel'
+          'command': 'sbt:toggle-panel'
+        }
+      ]
+    ]
+  }
+]

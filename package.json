@@ -1,0 +1,46 @@
+{
+  "name": "sbt",
+  "description": "Use the Scala Build Tool (sbt).",
+  "version": "0.1.0",
+  "author": {
+    "name": "Anthony Sloane",
+    "email": "inkytonik@gmail.com"
+  },
+  "license": "GPL-3.0",
+  "main": "./lib/sbt",
+  "keywords": [
+      "build",
+      "compile",
+      "sbt",
+      "scala",
+      "test"
+  ],
+  "homepage": "https://atom.io/packages/sbt",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/inkytonik/atom-sbt.git"
+  },
+  "bugs": {
+    "url": "https://github.com/inkytonik/atom-sbt/issues"
+  },
+  "activationCommands": {
+      "atom-workspace": "sbt:toggle-panel"
+  },
+  "engines": {
+    "atom": ">=1.0.0"
+  },
+  "dependencies": {
+    "atom-package-dependencies": ">=1.0.3"
+  },
+  "package-dependencies": {
+    "terminal-plus": ">=0.14.5",
+    "linter": ">=1.11.3"
+  },
+  "consumedServices": {
+    "linter-indie": {
+      "versions": {
+        "1.0.0": "consumeLinter"
+      }
+    }
+  }
+}

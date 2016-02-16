@@ -1,0 +1,9 @@
+'atom-workspace':
+  'alt-shift-C': 'sbt:compile'
+  'alt-shift-O': 'sbt:toggle-panel'
+  'alt-shift-R': 'sbt:run'
+  'alt-shift-T': 'sbt:test'
+  'alt-shift-V': 'sbt:run-last-command'
+  'alt-shift-X': 'sbt:exit'
+  'alt-shift-Z': 'sbt:clean'
+  'alt->':       'linter:next-error'
