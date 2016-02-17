@@ -1,2 +1,2 @@
-## v0.0.0 - Beta Release
+## v0.1.0 - Beta Release
 * Initial release
