@@ -1,7 +1,7 @@
 {
   "name": "sbt",
   "description": "Use the Scala Build Tool (sbt).",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "author": {
     "name": "Anthony Sloane",
     "email": "inkytonik@gmail.com"
