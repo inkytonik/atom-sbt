@@ -1,7 +1,7 @@
 {
   "name": "sbt",
   "description": "Use the Scala Build Tool (sbt).",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "author": {
     "name": "Anthony Sloane",
     "email": "inkytonik@gmail.com"
@@ -9,11 +9,11 @@
   "license": "GPL-3.0",
   "main": "./lib/sbt",
   "keywords": [
-      "build",
-      "compile",
-      "sbt",
-      "scala",
-      "test"
+    "build",
+    "compile",
+    "sbt",
+    "scala",
+    "test"
   ],
   "homepage": "https://atom.io/packages/sbt",
   "repository": {
@@ -24,7 +24,7 @@
     "url": "https://github.com/inkytonik/atom-sbt/issues"
   },
   "activationCommands": {
-      "atom-workspace": "sbt:toggle-panel"
+    "atom-workspace": "sbt:toggle-panel"
   },
   "engines": {
     "atom": ">=1.0.0"
