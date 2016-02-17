@@ -1,5 +1,3 @@
-# atom-sbt
-
 An Atom interface to the Scala Build Tool (sbt).
 
 This package provides support for interactive use of sbt within the Atom editor.
