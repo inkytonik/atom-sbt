@@ -19,6 +19,8 @@ path = require 'path'
 os = require 'os'
 
 apd = require 'atom-package-dependencies'
+apd.install()
+
 linter = apd.require 'linter'
 tplus = apd.require 'terminal-plus'
 
