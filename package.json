@@ -1,7 +1,7 @@
 {
   "name": "sbt",
   "description": "Use the Scala Build Tool (sbt).",
-  "version": "0.2.0",
+  "version": "0.3.0",
   "author": {
     "name": "Anthony Sloane",
     "email": "inkytonik@gmail.com"
@@ -32,7 +32,10 @@
   "dependencies": {
     "atom-package-deps": ">=4.0.1"
   },
-  "package-deps": ["linter", "terminal-plus"],
+  "package-deps": [
+    "linter",
+    "terminal-plus"
+  ],
   "consumedServices": {
     "linter-indie": {
       "versions": {
