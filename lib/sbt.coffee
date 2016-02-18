@@ -85,6 +85,11 @@ module.exports =
         type: 'boolean'
         default: true
         description: 'When checked, each command that is sent to sbt will be added to the command palette as "sbt: History n cmd" where "n" is the command count and "cmd" is the command string. Previously submitted commands can then easily be invoked via the command palette.'
+      script:
+        title: 'sbt Script'
+        type: 'string'
+        description: 'The filename of the sbt script.'
+        default: '/usr/local/bin/sbt'
 
     consumeLinter: (indieRegistry) ->
       @linter = indieRegistry.register({name: 'sbt'})
@@ -117,7 +122,8 @@ module.exports =
       if @notRunning(@term)
         shell = atom.config.get('terminal-plus.core.shell')
         shellArgs = atom.config.get('terminal-plus.core.shellArguments')
-        atom.config.set('terminal-plus.core.shell', 'sbt')
+        sbt = atom.config.get('sbt.script')
+        atom.config.set('terminal-plus.core.shell', sbt)
         atom.config.set('terminal-plus.core.shellArguments', '')
         tplus.statusBar.newTerminalView()
         @term = tplus.statusBar.activeTerminal
