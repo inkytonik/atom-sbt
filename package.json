@@ -30,12 +30,9 @@
     "atom": ">=1.0.0"
   },
   "dependencies": {
-    "atom-package-dependencies": ">=1.0.3"
+    "atom-package-deps": ">=4.0.1"
   },
-  "package-dependencies": {
-    "terminal-plus": ">=0.14.5",
-    "linter": ">=1.11.3"
-  },
+  "package-deps": ["linter", "terminal-plus"],
   "consumedServices": {
     "linter-indie": {
       "versions": {

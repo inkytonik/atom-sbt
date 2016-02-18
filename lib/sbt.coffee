@@ -18,12 +18,6 @@
 path = require 'path'
 os = require 'os'
 
-apd = require 'atom-package-dependencies'
-apd.install()
-
-linter = apd.require 'linter'
-tplus = apd.require 'terminal-plus'
-
 module.exports =
   Sbt =
     cmdbuf : ''
@@ -36,11 +30,12 @@ module.exports =
     messages: []
     lastCommand: null
     lineno: null
-    linter: null
+    linterpkg: null
     saved: ''
     special: ''
     subscriptions: null
     term: null
+    tpluspkg: null
 
     finalRE: /\[.*\] Total time/
 
@@ -55,14 +50,31 @@ module.exports =
     testRE: /\[info\]   (.*) \(([^:]+):([0-9]+)\)/
 
     activate: (state) ->
-      @history = new CompositeDisposable
       @subscriptions = new CompositeDisposable
+      apd = require('atom-package-deps')
+      apd.install().then =>
+        @activateProperly()
+
+    activateProperly: ->
+      @linterpkg = @activatePackage('linter')
+      @tpluspkg = @activatePackage('terminal-plus')
+      @history = new CompositeDisposable
       @subscriptions.add atom.commands.add 'atom-workspace', 'sbt:run-last-command': => @runLastCommand()
       @subscriptions.add atom.commands.add 'atom-workspace', 'sbt:clear-history': => @clearHistory()
       @subscriptions.add atom.commands.add 'atom-workspace', 'sbt:toggle-panel': => @togglePanel()
       for cmd in atom.config.get('sbt.commandList')
         name = "sbt:#{cmd.replace(':', '-')}"
         @addCommand(name, cmd)
+      @togglePanel()
+
+    activatePackage: (name) ->
+      if not atom.packages.isPackageActive(name)
+        atom.packages.activatePackage(name)
+      pack = atom.packages.getLoadedPackage(name)
+      if (pack && pack.mainModulePath)
+        require(pack.mainModulePath)
+      else
+        console.log('sbt error: cannot find Atom package ' + pack);
 
     addCommand: (name, cmd) ->
       @subscriptions.add atom.commands.add 'atom-workspace', name, => @runCommand(cmd)
@@ -125,8 +137,8 @@ module.exports =
         sbt = atom.config.get('sbt.script')
         atom.config.set('terminal-plus.core.shell', sbt)
         atom.config.set('terminal-plus.core.shellArguments', '')
-        tplus.statusBar.newTerminalView()
-        @term = tplus.statusBar.activeTerminal
+        @tpluspkg.statusBar.newTerminalView()
+        @term = @tpluspkg.statusBar.activeTerminal
         atom.config.set('terminal-plus.core.shell', shell)
         atom.config.set('terminal-plus.core.shellArguments', shellArgs)
         @setTitle(@term, 'sbt')
@@ -142,7 +154,7 @@ module.exports =
         @term.toggle()
 
     notRunning: (term) ->
-      tplus.statusBar.indexOf(term) < 0
+      @tpluspkg.statusBar.indexOf(term) < 0
 
     parseLineNo: (str) ->
       parseInt(str, 10) - 1
