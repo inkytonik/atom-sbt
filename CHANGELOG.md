@@ -1,3 +1,6 @@
+## v0.4.0
+* Added error dialog when sbt script can't be run (Unix).
+
 ## v0.3.0
 * Much better handling of package dependencies.
 * Added option to specify the filename of the sbt script.

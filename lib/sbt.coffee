@@ -142,7 +142,6 @@ module.exports =
         atom.config.set('terminal-plus.core.shell', shell)
         atom.config.set('terminal-plus.core.shellArguments', shellArgs)
         @setTitle(@term, 'sbt')
-        @term.open()
         @term.onTransitionEnd =>
           @term.ptyProcess.on 'terminal-plus:data', (data) =>
             @processData(data)
@@ -150,6 +149,7 @@ module.exports =
             @clearMessages()
           @term.terminal.on 'data', (data) =>
             @userInput(data)
+        @term.open()
       if not(@term.panel.isVisible())
         @term.toggle()
 
@@ -160,6 +160,11 @@ module.exports =
       parseInt(str, 10) - 1
 
     processData: (data) ->
+      if data.includes('No such file or directory')
+        sbt = atom.config.get('sbt.script')
+        atom.confirm
+          message: "Error running sbt script"
+          detailedMessage: "#{data}\nSee the 'sbt Script' setting in sbt package. Current setting is '#{sbt}'."
       data = @saved + data
       isfull = data.endsWith('\n')
       lines = data.replace(/\x1b\[[0-9]+m/g, '').trim().split('\n')
