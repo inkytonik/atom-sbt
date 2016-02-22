@@ -13,7 +13,8 @@ Open the top-level directory of an sbt project in Atom.
 An interactive sbt session can then be started within Atom using the "Sbt: Toggle Panel" command (`alt-shift-O`).
 This command will open a new terminal panel using terminal-plus and run sbt in it.
 
-The sbt package currently assumes that the sbt script can be invoked as "sbt" so you will need to ensure that the Atom process has the appropriate environment variables set to enable it to be found.
+By default, the sbt package assumes that the sbt script can be invoked as `/usr/local/bin/sbt`.
+Use the "sbt Script" setting to specify a different location.
 
 Once the terminal panel has been created, you can interactively invoke sbt commands by typing into the panel.
 All interactive sbt commands should work, including cursor movement to access history and TAB to invoke completion.
