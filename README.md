@@ -65,3 +65,38 @@ If you have the linter package set to show linter information in the status bar,
 If you have the linter set to show inline error tooltips and/or highlights for error lines in the gutter, you should see those for your errors too.
 
 Most usefully, you should be able to use the "Linter: Next Error" Atom command (`alt-shift-.` or `alt->`) to cycle through the errors and to go to their locations in your code.
+
+## ScalaTest support
+
+The sbt package also has support for telling the linter about the location of ScalaTest test failures, under some assumptions.
+It assumes that test failures look like this:
+
+    [info] MySuite in src/foo/bar:
+    [info] - something important works *** FAILED ***
+    [info]   99 was not equal to 100 (MyFile.scala:159)
+
+`MySuite` is the name of the ScalaTest suite.
+`src/foo/bar` is the path of the suite relative to the top of the project.
+The test failed at line 159 of `src/foo/bar/MyFile.scala`.
+There may be other lines between the `FAILED` line and the final one.
+
+This is the default output format produced by ScalaTest suites, except for one detail.
+ScalaTest does not report the suite path.
+
+The sbt package needs the path so that it can map the failure to the correct file even if more than one file has that name.
+We assume that the suite and the file with the failing test live in the same directory.
+
+If you want to use this facility you need to augment your suites so that their names include the path information.
+E.g., placing the following code in the suite will produce the output above, assuming that the file is located in the directory given by its package.
+
+    override def suiteName = {
+        val pkgName = Option(getClass.getPackage).map(_.getName).getOrElse("")
+        val path = s"src/${pkgName.replaceAllLiterally(".", "/")}"
+        s"${super.suiteName} in $path"
+    }
+
+We're aware that this solution is less than ideal.
+If we can convince the ScalaTest maintainers to include this implementation of `suiteName` by default, then we will.
+However, the situation is tricky so we are not confident.
+E.g., the file in which the failure occurs may not actually be in the same directory as the suite, which is assumed above.
+ScalaTest gets the filename from an exception stack trace but Java doesn't provide full paths to files in stack traces, so there is nothing ScalaTest can do.

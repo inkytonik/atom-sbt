@@ -23,11 +23,11 @@ module.exports =
     cmdbuf : ''
     cmdcount: 0
     cmds: new Set([])
-    filePath: null
     history: null
     info: []
     message: null
     messages: []
+    pkgPath: null
     lastCommand: null
     lineno: null
     linterpkg: null
@@ -179,7 +179,7 @@ module.exports =
           if match?
             # console.log('finalRE')
             @linter.setMessages(@messages)
-            @filePath = null
+            @pkgPath = null
           else
             match = @errorRE.exec(line)
             if match?
@@ -197,7 +197,7 @@ module.exports =
                 if match?
                   # console.log('testnameRE')
                   projpath = atom.project.getPaths()[0]
-                  @filePath = path.join(projpath, "#{match[1]}.scala")
+                  @pkgPath = path.join(projpath, match[1])
                   @info = []
                 else
                   match = @failRE.exec(line)
@@ -208,15 +208,15 @@ module.exports =
                     match = @testRE.exec(line)
                     if match?
                       # console.log('testRE')
-                      if @message? and @filePath?
+                      if @message? and @pkgPath?
                         # Needs testnameRE and failRE to have matched earlier
                         @lineno = @parseLineNo(match[3])
                         @message.text = "#{@message.text}\n#{@info.join('\n')}\n#{match[1]}"
                         @message.range = [[@lineno, 1], [@lineno + 1, 1]]
-                        @message.filePath = @filePath
+                        @message.filePath = "#{@pkgPath}/#{match[2]}"
                         # console.log(@message)
                         @messages.push(@message)
-                        @filePath = null
+                        @pkgPath = null
                         @message = null
                       else
                         # do nothing
@@ -224,7 +224,7 @@ module.exports =
                       match = @pointerRE.exec(line)
                       if match?
                         # console.log('pointerRE')
-                        if @message? and not(@filePath)
+                        if @message? and not(@pkgPath)
                           # Needs errorRE or warnRE to have matched earlier
                           # Avoid matching pointer lines in test output
                           colno = match[1].length
