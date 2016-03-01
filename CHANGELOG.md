@@ -1,3 +1,6 @@
+## v0.6.0
+* Clear messages when an interactive command is entered
+
 ## v0.5.0
 * Change ScalaTest support to just require suite path, document it
 

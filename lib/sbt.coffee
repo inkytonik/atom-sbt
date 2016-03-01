@@ -261,6 +261,7 @@ module.exports =
 
     userInput: (data) ->
       if data == "\r"
+        @clearMessages()
         @addToHistory(@cmdbuf)
         @cmdbuf = ''
       else
