@@ -103,6 +103,11 @@ module.exports =
         type: 'string'
         description: 'The filename of the sbt script.'
         default: '/usr/local/bin/sbt'
+      showTermAutomatically:
+        title: 'Show the sbt terminal automatically'
+        type: 'boolean'
+        default: true
+        description: 'When checked, the sbt terminal will be made visible each time an sbt command is executed.'
 
     consumeLinter: (indieRegistry) ->
       @linter = indieRegistry.register({name: 'sbt'})
@@ -262,12 +267,11 @@ module.exports =
           @clearMessages()
         @term.terminal.on 'data', (data) =>
           @userInput(data)
-      @term.open()
-      if not(@term.panel.isVisible())
-        @term.toggle()
+      if atom.config.get('sbt.showTermAutomatically') and not(@term.panel.isVisible())
+        @term.open()
 
     showPanel: ->
-      if not(@term.panel.isVisible())
+      if atom.config.get('sbt.showTermAutomatically') and not(@term.panel.isVisible())
         @togglePanel()
 
     togglePanel: ->
