@@ -245,7 +245,6 @@ module.exports =
       term.statusIcon.updateName(title)
 
     startTerm: ->
-      console.log('startTerm')
       shell = atom.config.get('terminal-plus.core.shell')
       shellArgs = atom.config.get('terminal-plus.core.shellArguments')
       sbt = atom.config.get('sbt.script')
