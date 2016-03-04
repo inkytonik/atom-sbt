@@ -1,4 +1,5 @@
 ## v0.7.0
+* Add setting to control whether or not the sbt terminal is shown automatically
 * More robust solution for sbt script that can't be found or run
 
 ## v0.6.0
