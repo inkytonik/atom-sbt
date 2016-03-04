@@ -28,6 +28,7 @@ module.exports =
     info: []
     message: null
     messages: []
+    pendingClear: false
     pkgPath: null
     lastCommand: null
     lineno: null
@@ -44,6 +45,8 @@ module.exports =
     errorContRE: /\[error\] ([^\^]*)/
     warnRE: /\[warn\] ([^:]+):([0-9]+): (.*)/
     pointerRE: /\[.*\] ( *)\^/
+
+    contRE: /[0-9]+\. Waiting for source changes\.\.\. \(press enter to interrupt\)/
 
     testnameRE: /\[info\] \w+ in (.*):/
     failRE: /\[info\] - (.*) \*\*\* FAILED \*\*\*/
@@ -143,6 +146,9 @@ module.exports =
       parseInt(str, 10) - 1
 
     processData: (data) ->
+      if @pendingClear
+        @clearMessages()
+        @pendingClear = false
       data = @saved + data
       isfull = data.endsWith('\n')
       lines = data.replace(/\x1b\[[0-9]+m/g, '').trim().split('\n')
@@ -226,6 +232,11 @@ module.exports =
                           if match?
                             # console.log('infoRE')
                             @info.push(match[1])
+                          else
+                            match = @contRE.exec(line)
+                            if match?
+                              # console.log('contRE')
+                              @pendingClear = true
 
     runLastCommand: ->
       if @lastCommand != null
