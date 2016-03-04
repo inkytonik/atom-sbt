@@ -15,6 +15,7 @@
 # along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 {CompositeDisposable} = require 'atom'
+fs = require 'fs'
 path = require 'path'
 os = require 'os'
 
@@ -130,41 +131,13 @@ module.exports =
       s = s.replace(':', '\u02D0') # MO­DI­FI­ER LET­TER TRIANGULAR COLON
       return s
 
-    ensureTerm: ->
-      if @notRunning(@term)
-        shell = atom.config.get('terminal-plus.core.shell')
-        shellArgs = atom.config.get('terminal-plus.core.shellArguments')
-        sbt = atom.config.get('sbt.script')
-        atom.config.set('terminal-plus.core.shell', sbt)
-        atom.config.set('terminal-plus.core.shellArguments', '')
-        @tpluspkg.statusBar.newTerminalView()
-        @term = @tpluspkg.statusBar.activeTerminal
-        atom.config.set('terminal-plus.core.shell', shell)
-        atom.config.set('terminal-plus.core.shellArguments', shellArgs)
-        @setTitle(@term, 'sbt')
-        @term.onTransitionEnd =>
-          @term.ptyProcess.on 'terminal-plus:data', (data) =>
-            @processData(data)
-          @term.ptyProcess.on 'terminal-plus:exit', =>
-            @clearMessages()
-          @term.terminal.on 'data', (data) =>
-            @userInput(data)
-        @term.open()
-      if not(@term.panel.isVisible())
-        @term.toggle()
-
-    notRunning: (term) ->
-      @tpluspkg.statusBar.indexOf(term) < 0
+    isRunning: (term) ->
+      @tpluspkg.statusBar.indexOf(term) != -1
 
     parseLineNo: (str) ->
       parseInt(str, 10) - 1
 
     processData: (data) ->
-      if data.includes('No such file or directory')
-        sbt = atom.config.get('sbt.script')
-        atom.confirm
-          message: "Error running sbt script"
-          detailedMessage: "#{data}\nSee the 'sbt Script' setting in sbt package. Current setting is '#{sbt}'."
       data = @saved + data
       isfull = data.endsWith('\n')
       lines = data.replace(/\x1b\[[0-9]+m/g, '').trim().split('\n')
@@ -255,7 +228,7 @@ module.exports =
 
     runCommand: (cmd) ->
       @clearMessages()
-      @ensureTerm()
+      @showPanel()
       @addToHistory(cmd)
       @term.input("#{cmd}#{os.EOL}")
 
@@ -271,8 +244,42 @@ module.exports =
       term.title = title
       term.statusIcon.updateName(title)
 
-    togglePanel: ->
-      if @notRunning(@term)
-        @ensureTerm()
-      else
+    startTerm: ->
+      console.log('startTerm')
+      shell = atom.config.get('terminal-plus.core.shell')
+      shellArgs = atom.config.get('terminal-plus.core.shellArguments')
+      sbt = atom.config.get('sbt.script')
+      atom.config.set('terminal-plus.core.shell', sbt)
+      atom.config.set('terminal-plus.core.shellArguments', '')
+      @tpluspkg.statusBar.newTerminalView()
+      @term = @tpluspkg.statusBar.activeTerminal
+      atom.config.set('terminal-plus.core.shell', shell)
+      atom.config.set('terminal-plus.core.shellArguments', shellArgs)
+      @setTitle(@term, 'sbt')
+      @term.onTransitionEnd =>
+        @term.ptyProcess.on 'terminal-plus:data', (data) =>
+          @processData(data)
+        @term.ptyProcess.on 'terminal-plus:exit', =>
+          @clearMessages()
+        @term.terminal.on 'data', (data) =>
+          @userInput(data)
+      @term.open()
+      if not(@term.panel.isVisible())
         @term.toggle()
+
+    showPanel: ->
+      if not(@term.panel.isVisible())
+        @togglePanel()
+
+    togglePanel: ->
+      if @isRunning(@term)
+        @term.toggle()
+      else
+        sbt = atom.config.get('sbt.script')
+        fs.access sbt, fs.X_OK, (err) =>
+          if err
+            atom.confirm
+              message: "sbt script can't be executed"
+              detailedMessage: "#{sbt}\n\ncan't be executed by Atom.\n\nPlease adjust the sbt Script setting in the sbt package."
+          else
+            @startTerm()

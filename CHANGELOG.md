@@ -1,3 +1,6 @@
+## v0.7.0
+* More robust solution for sbt script that can't be found or run
+
 ## v0.6.0
 * Clear messages when an interactive command is entered
 
