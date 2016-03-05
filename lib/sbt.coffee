@@ -200,7 +200,6 @@ module.exports =
                         @message.filePath = "#{@pkgPath}/#{match[2]}"
                         # console.log(@message)
                         @messages.push(@message)
-                        @pkgPath = null
                         @message = null
                       else
                         # do nothing
