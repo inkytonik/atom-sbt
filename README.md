@@ -22,6 +22,10 @@ All interactive sbt commands should work, including cursor movement to access hi
 The terminal panel will be shown each time you run a command so you can see what sbt prints.
 If you prefer not to see the sbt output automatically, turn off the "Show the sbt terminal automatically" setting.
 
+The terminal title will be "sbt" and a description of the project.
+By default, the basename of the main project path will be used as the description (e.g., "myproj" for a project path of "/foo/bar/myproj").
+If you want to see the full project path, turn on the "Terminal title should show full project path" setting.
+
 ## History
 
 As well as supporting interactive use, the sbt package has a number of Atom commands to make it easier to send commands to sbt more than once.

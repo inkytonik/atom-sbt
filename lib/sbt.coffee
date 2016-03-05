@@ -111,6 +111,11 @@ module.exports =
         type: 'boolean'
         default: true
         description: 'When checked, the sbt terminal will be made visible each time an sbt command is executed.'
+      titleShowsFullPath:
+        title: 'Terminal title should show full project path'
+        type: 'boolean'
+        default: false
+        description: 'Normally the sbt terminal title includes only the basename of the project path. When this is checked, the title will show the full project path.'
 
     consumeLinter: (indieRegistry) ->
       @linter = indieRegistry.register({name: 'sbt'})
@@ -255,7 +260,11 @@ module.exports =
       else
         @cmdbuf = @cmdbuf + data
 
-    setTitle: (term, title) ->
+    setTitle: (term) ->
+      projPath = atom.project.getPaths()[0]
+      if not atom.config.get('sbt.titleShowsFullPath')
+        projPath = path.basename(projPath)
+      title = "sbt #{projPath}"
       term.title = title
       term.statusIcon.updateName(title)
 
@@ -269,7 +278,7 @@ module.exports =
       @term = @tpluspkg.statusBar.activeTerminal
       atom.config.set('terminal-plus.core.shell', shell)
       atom.config.set('terminal-plus.core.shellArguments', shellArgs)
-      @setTitle(@term, 'sbt')
+      @setTitle(@term)
       @term.onTransitionEnd =>
         @term.ptyProcess.on 'terminal-plus:data', (data) =>
           @processData(data)
