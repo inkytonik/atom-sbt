@@ -19,6 +19,9 @@ Use the "sbt Script" setting to specify a different location.
 Once the terminal panel has been created, you can interactively invoke sbt commands by typing into the panel.
 All interactive sbt commands should work, including cursor movement to access history and TAB to invoke completion.
 
+The terminal panel will be shown each time you run a command so you can see what sbt prints.
+If you prefer not to see the sbt output automatically, turn off the "Show the sbt terminal automatically" setting.
+
 ## History
 
 As well as supporting interactive use, the sbt package has a number of Atom commands to make it easier to send commands to sbt more than once.
