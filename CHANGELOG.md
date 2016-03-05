@@ -1,4 +1,5 @@
 ## v0.7.0
+* Fix bug in recognition of multiple test failures in a single test suite
 * Clear messages after a pause during continuous execution of a command
 * Add setting to control whether or not the sbt terminal is shown automatically
 * More robust solution for sbt script that can't be found or run
