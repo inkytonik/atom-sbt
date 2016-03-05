@@ -252,14 +252,6 @@ module.exports =
       @addToHistory(cmd)
       @term.input("#{cmd}#{os.EOL}")
 
-    userInput: (data) ->
-      if data == "\r"
-        @clearMessages()
-        @addToHistory(@cmdbuf)
-        @cmdbuf = ''
-      else
-        @cmdbuf = @cmdbuf + data
-
     setTitle: (term) ->
       projPath = atom.project.getPaths()[0]
       if not atom.config.get('sbt.titleShowsFullPath')
@@ -305,3 +297,11 @@ module.exports =
               detailedMessage: "#{sbt}\n\ncan't be executed by Atom.\n\nPlease adjust the sbt Script setting in the sbt package."
           else
             @startTerm()
+
+    userInput: (data) ->
+      if data == "\r"
+        @clearMessages()
+        @addToHistory(@cmdbuf)
+        @cmdbuf = ''
+      else
+        @cmdbuf = @cmdbuf + data
