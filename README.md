@@ -1,7 +1,7 @@
 An Atom interface to the Scala Build Tool (sbt).
 
 This package provides support for interactive use of sbt within the Atom editor.
-It uses the [terminal-plus](https://atom.io/packages/terminal-plus) package to provide the terminal support and uses the [linter](https://atom.io/packages/linter) package to annotate source code with error messages.
+It uses the [PlatformIO IDE Terminal](https://atom.io/packages/platformio-ide-terminal) package to provide the terminal support and uses the [linter](https://atom.io/packages/linter) package to annotate source code with error messages.
 
 ## Author
 
@@ -11,7 +11,7 @@ inkytonik, Anthony Sloane ([inkytonik@gmail.com](mailto:inkytonik@gmail.com))
 
 Open the top-level directory of an sbt project in Atom.
 An interactive sbt session can then be started within Atom using the "Sbt: Toggle Panel" command (`alt-shift-O`).
-This command will open a new terminal panel using terminal-plus and run sbt in it.
+This command will open a new terminal panel and run sbt in it.
 
 By default, the sbt package assumes that the sbt script can be invoked as `/usr/local/bin/sbt`.
 Use the "sbt Script" setting to specify a different location.

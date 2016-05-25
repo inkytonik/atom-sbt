@@ -34,7 +34,7 @@
   },
   "package-deps": [
     "linter",
-    "terminal-plus"
+    "platformio-ide-terminal"
   ],
   "consumedServices": {
     "linter-indie": {

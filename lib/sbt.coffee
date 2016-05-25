@@ -61,7 +61,7 @@ module.exports =
 
     activateProperly: ->
       @linterpkg = @activatePackage('linter')
-      @tpluspkg = @activatePackage('terminal-plus')
+      @tpluspkg = @activatePackage('platformio-ide-terminal')
       @history = new CompositeDisposable
       @subscriptions.add atom.commands.add 'atom-workspace', 'sbt:run-last-command': => @runLastCommand()
       @subscriptions.add atom.commands.add 'atom-workspace', 'sbt:clear-history': => @clearHistory()
@@ -145,7 +145,7 @@ module.exports =
       return s
 
     isRunning: (term) ->
-      @tpluspkg.statusBar.indexOf(term) != -1
+      @tpluspkg.statusBarTile.indexOf(term) != -1
 
     parseLineNo: (str) ->
       parseInt(str, 10) - 1
@@ -261,20 +261,20 @@ module.exports =
       term.statusIcon.updateName(title)
 
     startTerm: ->
-      shell = atom.config.get('terminal-plus.core.shell')
-      shellArgs = atom.config.get('terminal-plus.core.shellArguments')
+      shell = atom.config.get('platformio-ide-terminal.core.shell')
+      shellArgs = atom.config.get('platformio-ide-terminal.core.shellArguments')
       sbt = atom.config.get('sbt.script')
-      atom.config.set('terminal-plus.core.shell', sbt)
-      atom.config.set('terminal-plus.core.shellArguments', '')
-      @tpluspkg.statusBar.newTerminalView()
-      @term = @tpluspkg.statusBar.activeTerminal
-      atom.config.set('terminal-plus.core.shell', shell)
-      atom.config.set('terminal-plus.core.shellArguments', shellArgs)
+      atom.config.set('platformio-ide-terminal.core.shell', sbt)
+      atom.config.set('platformio-ide-terminal.core.shellArguments', '')
+      @tpluspkg.statusBarTile.newTerminalView()
+      @term = @tpluspkg.statusBarTile.activeTerminal
+      atom.config.set('platformio-ide-terminal.core.shell', shell)
+      atom.config.set('platformio-ide-terminal.core.shellArguments', shellArgs)
       @setTitle(@term)
       @term.onTransitionEnd =>
-        @term.ptyProcess.on 'terminal-plus:data', (data) =>
+        @term.ptyProcess.on 'platformio-ide-terminal:data', (data) =>
           @processData(data)
-        @term.ptyProcess.on 'terminal-plus:exit', =>
+        @term.ptyProcess.on 'platformio-ide-terminal:exit', =>
           @clearMessages()
         @term.terminal.on 'data', (data) =>
           @userInput(data)
