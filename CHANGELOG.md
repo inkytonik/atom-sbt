@@ -1,3 +1,6 @@
+## v0.8.0
+* Move from terminal-plus to platformio-ide-terminal
+
 ## v0.7.0
 * Add project path to terminal title
 * Fix bug in recognition of multiple test failures in a single test suite
