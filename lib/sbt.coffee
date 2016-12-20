@@ -46,7 +46,8 @@ module.exports =
     warnRE: /\[warn\] ([^:]+):([0-9]+): (.*)/
     pointerRE: /\[.*\] ( *)\^/
 
-    contRE: /[0-9]+\. Waiting for source changes\.\.\. \(press enter to interrupt\)/
+    contRE:
+      /[0-9]+\. Waiting for source changes\.\.\. \(press enter to interrupt\)/
 
     testnameRE: /\[info\] \w+ in (.*):/
     failRE: /\[info\] - (.*) \*\*\* FAILED \*\*\*/
@@ -63,9 +64,12 @@ module.exports =
       @linterpkg = @activatePackage('linter')
       @tpluspkg = @activatePackage('platformio-ide-terminal')
       @history = new CompositeDisposable
-      @subscriptions.add atom.commands.add 'atom-workspace', 'sbt:run-last-command': => @runLastCommand()
-      @subscriptions.add atom.commands.add 'atom-workspace', 'sbt:clear-history': => @clearHistory()
-      @subscriptions.add atom.commands.add 'atom-workspace', 'sbt:toggle-panel': => @togglePanel()
+      @subscriptions.add atom.commands.add 'atom-workspace',
+        'sbt:run-last-command': => @runLastCommand()
+      @subscriptions.add atom.commands.add 'atom-workspace',
+        'sbt:clear-history': => @clearHistory()
+      @subscriptions.add atom.commands.add 'atom-workspace',
+        'sbt:toggle-panel': => @togglePanel()
       for cmd in atom.config.get('sbt.commandList')
         name = "sbt:#{cmd.replace(':', '-')}"
         @addCommand(name, cmd)
@@ -78,44 +82,57 @@ module.exports =
       if (pack && pack.mainModulePath)
         require(pack.mainModulePath)
       else
-        console.log('sbt error: cannot find Atom package ' + pack);
+        console.log('sbt error: cannot find Atom package ' + pack)
 
     addCommand: (name, cmd) ->
-      @subscriptions.add atom.commands.add 'atom-workspace', name, => @runCommand(cmd)
+      @subscriptions.add atom.commands.add 'atom-workspace',
+        name, => @runCommand(cmd)
 
     addToHistory: (cmd) ->
       @lastCommand = cmd
       if atom.config.get('sbt.createHistoryCommands') and not(@cmds.has(cmd))
         @cmds.add(cmd)
-        @history.add atom.commands.add 'atom-workspace', @commandEventName(cmd), => @runCommand(cmd)
+        @history.add atom.commands.add 'atom-workspace',
+          @commandEventName(cmd), => @runCommand(cmd)
 
     config:
       commandList:
         title: 'Command List'
         type: 'array'
-        description: 'This setting is consulted when the package is activated. For each string cmd in the list an Atom workspace command "sbt:cmd" will be defined (with colons in cmd being replaced by hyphens). Thus, test:compile becomes command "sbt:test-compile" and will send the input "test:compile" to sbt when invoked.'
+        description: 'This setting is consulted when the package is activated.
+          For each string cmd in the list an Atom workspace command "sbt:cmd"
+          will be defined (with colons in cmd being replaced by hyphens).
+          Thus, test:compile becomes command "sbt:test-compile" and will send
+          the input "test:compile" to sbt when invoked.'
         default: ["clean", "compile", "exit", "run", "test"]
         items:
           type: 'string'
       createHistoryCommands:
         type: 'boolean'
         default: true
-        description: 'When checked, each command that is sent to sbt will be added to the command palette as "sbt: History n cmd" where "n" is the command count and "cmd" is the command string. Previously submitted commands can then easily be invoked via the command palette.'
+        description: 'When checked, each command that is sent to sbt will be
+          added to the command palette as "sbt: History n cmd" where "n" is
+          the command count and "cmd" is the command string. Previously
+          submitted commands can then easily be invoked via the command
+          palette.'
       script:
         title: 'sbt Script'
         type: 'string'
         description: 'The filename of the sbt script.'
         default: '/usr/local/bin/sbt'
-      showTermAutomatically:
+      showTermAuto:
         title: 'Show the sbt terminal automatically'
         type: 'boolean'
         default: true
-        description: 'When checked, the sbt terminal will be made visible each time an sbt command is executed.'
+        description: 'When checked, the sbt terminal will be made visible
+          each time an sbt command is executed.'
       titleShowsFullPath:
         title: 'Terminal title should show full project path'
         type: 'boolean'
         default: false
-        description: 'Normally the sbt terminal title includes only the basename of the project path. When this is checked, the title will show the full project path.'
+        description: 'Normally the sbt terminal title includes only the
+          basename of the project path. When this is checked, the title
+          will show the full project path.'
 
     consumeLinter: (indieRegistry) ->
       @linter = indieRegistry.register({name: 'sbt'})
@@ -278,11 +295,11 @@ module.exports =
           @clearMessages()
         @term.terminal.on 'data', (data) =>
           @userInput(data)
-      if atom.config.get('sbt.showTermAutomatically') and not(@term.panel.isVisible())
+      if atom.config.get('sbt.showTermAuto') and not(@term.panel.isVisible())
         @term.open()
 
     showPanel: ->
-      if atom.config.get('sbt.showTermAutomatically') and not(@term.panel.isVisible())
+      if atom.config.get('sbt.showTermAuto') and not(@term.panel.isVisible())
         @togglePanel()
 
     togglePanel: ->
@@ -294,7 +311,8 @@ module.exports =
           if err
             atom.confirm
               message: "sbt script can't be executed"
-              detailedMessage: "#{sbt}\n\ncan't be executed by Atom.\n\nPlease adjust the sbt Script setting in the sbt package."
+              detailedMessage: "#{sbt}\n\ncan't be executed by Atom.\n\nPlease
+                adjust the sbt Script setting in the sbt package."
           else
             @startTerm()
 
