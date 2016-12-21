@@ -181,83 +181,66 @@ module.exports =
       for line in lines
         do (line) =>
           # console.log(line)
-          match = @finalRE.exec(line)
-          if match?
-            # console.log('finalRE')
-            @linter.setMessages(@messages)
-            @pkgPath = null
-          else
-            match = @errorRE.exec(line)
-            if match?
+          switch
+            when @finalRE.exec(line)
+              # console.log('finalRE')
+              @linter.setMessages(@messages)
+              @pkgPath = null
+            when match = @errorRE.exec(line)
               # console.log('errorRE')
               @lineno = @parseLineNo(match[2])
               @message = {type: 'Error', text: match[3], filePath: match[1]}
-            else
-              match = @warnRE.exec(line)
-              if match?
-                # console.log('warnRE')
-                @lineno = @parseLineNo(match[2])
-                @message = {type: 'Warning', text: match[3], filePath: match[1]}
+            when match = @warnRE.exec(line)
+              # console.log('warnRE')
+              @lineno = @parseLineNo(match[2])
+              @message = {type: 'Warning', text: match[3], filePath: match[1]}
+            when match = @testnameRE.exec(line)
+              # console.log('testnameRE')
+              projpath = atom.project.getPaths()[0]
+              @pkgPath = path.join(projpath, match[1])
+              @info = []
+            when match = @failRE.exec(line)
+              # console.log('failRE')
+              @message = {type: 'Error', text: match[1]}
+            when match = @testRE.exec(line)
+              # console.log('testRE')
+              if @message? and @pkgPath?
+                # Needs testnameRE and failRE to have matched earlier
+                @lineno = @parseLineNo(match[3])
+                @infolines = @info.join('\n')
+                @message.text = "#{@message.text}\n#{@infolines}\n#{match[1]}"
+                @message.range = [[@lineno, 1], [@lineno + 1, 1]]
+                @message.filePath = "#{@pkgPath}/#{match[2]}"
+                # console.log(@message)
+                @messages.push(@message)
+                @message = null
               else
-                match = @testnameRE.exec(line)
-                if match?
-                  # console.log('testnameRE')
-                  projpath = atom.project.getPaths()[0]
-                  @pkgPath = path.join(projpath, match[1])
-                  @info = []
-                else
-                  match = @failRE.exec(line)
-                  if match?
-                    # console.log('failRE')
-                    @message = {type: 'Error', text: match[1]}
-                  else
-                    match = @testRE.exec(line)
-                    if match?
-                      # console.log('testRE')
-                      if @message? and @pkgPath?
-                        # Needs testnameRE and failRE to have matched earlier
-                        @lineno = @parseLineNo(match[3])
-                        @message.text = "#{@message.text}\n#{@info.join('\n')}\n#{match[1]}"
-                        @message.range = [[@lineno, 1], [@lineno + 1, 1]]
-                        @message.filePath = "#{@pkgPath}/#{match[2]}"
-                        # console.log(@message)
-                        @messages.push(@message)
-                        @message = null
-                      else
-                        # do nothing
-                    else
-                      match = @pointerRE.exec(line)
-                      if match?
-                        # console.log('pointerRE')
-                        if @message? and not(@pkgPath)
-                          # Needs errorRE or warnRE to have matched earlier
-                          # Avoid matching pointer lines in test output
-                          colno = match[1].length
-                          @message.range = [[@lineno, colno], [@lineno, colno]]
-                          # console.log(@message)
-                          @messages.push(@message)
-                          @message = null
-                        else
-                          # do nothing
-                      else
-                        match = @errorContRE.exec(line)
-                        if match?
-                          # console.log('errorContRE')
-                          # assume errorRE matched earlier
-                          if @message?
-                            @message.text = "#{@message.text}\n#{match[1]}"
-                          else
-                            # do nothing
-                        else
-                          match = @infoRE.exec(line)
-                          if match?
-                            # console.log('infoRE')
-                            @info.push(match[1])
-                          else
-                            match = @contRE.exec(line)
-                            if match?
-                              # console.log('contRE')
-                              @pendingClear = true
+                # do nothing
+            when match = @pointerRE.exec(line)
+              # console.log('pointerRE')
+              if @message? and not(@pkgPath)
+                # Needs errorRE or warnRE to have matched earlier
+                # Avoid matching pointer lines in test output
+                colno = match[1].length
+                @message.range = [[@lineno, colno], [@lineno, colno]]
+                # console.log(@message)
+                @messages.push(@message)
+                @message = null
+              else
+                # do nothing
+            when match = @errorContRE.exec(line)
+              # console.log('errorContRE')
+              if @message?
+                # Need errorRE matched earlier
+                @message.text = "#{@message.text}\n#{match[1]}"
+              else
+                # do nothing
+            when match = @infoRE.exec(line)
+              # console.log('infoRE')
+              @info.push(match[1])
+            when match = @contRE.exec(line)
+              # console.log('contRE')
+              @pendingClear = true
 
     runLastCommand: ->
       if @lastCommand != null
