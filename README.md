@@ -26,6 +26,9 @@ The terminal title will be "sbt" and a description of the project.
 By default, the basename of the main project path will be used as the description (e.g., "myproj" for a project path of "/foo/bar/myproj").
 If you want to see the full project path, turn on the "Terminal title should show full project path" setting.
 
+If you have changed your sbt prompt from the default, you may need to set the "Prompt Pattern" setting to match your new prompt.
+This setting is used to spot the prompt when resuming interactive use after a continuous execution command (e.g., ~compile) has been interrupted by another command.
+
 ## History
 
 As well as supporting interactive use, the sbt package has a number of Atom commands to make it easier to send commands to sbt more than once.

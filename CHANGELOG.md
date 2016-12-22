@@ -1,3 +1,6 @@
+## v0.9.0
+* More robust resuming of interactive commands after a continuous command has been interrupted
+
 ## v0.8.0
 * Move from terminal-plus to platformio-ide-terminal
 

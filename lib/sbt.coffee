@@ -38,6 +38,7 @@ module.exports =
     subscriptions: null
     term: null
     tpluspkg: null
+    waiting: false
 
     finalRE: /\[.*\] Total time/
 
@@ -115,6 +116,13 @@ module.exports =
           the command count and "cmd" is the command string. Previously
           submitted commands can then easily be invoked via the command
           palette.'
+      promptPattern:
+        type: 'string'
+        default: '[^>]*> '
+        description: 'A regular expression pattern that matches your sbt
+          prompt. This setting is used to spot the prompt to resume
+          interactive use when a continuous execution command (e.g.,
+          ~compile) has been interrupted by another command.'
       script:
         title: 'sbt Script'
         type: 'string'
@@ -172,6 +180,11 @@ module.exports =
         @clearMessages()
         @pendingClear = false
       data = @saved + data
+      if @waiting
+        if new RegExp(atom.config.get('sbt.promptPattern')).exec(data)
+          # console.log('waiting and promptPattern')
+          @term.input(@pendingInput)
+          @waiting = false
       isfull = data.endsWith('\n')
       lines = data.replace(/\x1b\[[0-9]+m/g, '').trim().split('\n')
       if isfull
@@ -241,6 +254,7 @@ module.exports =
             when match = @contRE.exec(line)
               # console.log('contRE')
               @pendingClear = true
+              @waiting = true
 
     runLastCommand: ->
       if @lastCommand != null
@@ -250,7 +264,12 @@ module.exports =
       @clearMessages()
       @showPanel()
       @addToHistory(cmd)
-      @term.input("#{cmd}#{os.EOL}")
+      input = "#{cmd}#{os.EOL}"
+      if @waiting
+        @term.input(os.EOL)
+        @pendingInput = input
+      else
+        @term.input(input)
 
     setTitle: (term) ->
       projPath = atom.project.getPaths()[0]
