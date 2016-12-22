@@ -10,39 +10,39 @@ inkytonik, Anthony Sloane ([inkytonik@gmail.com](mailto:inkytonik@gmail.com))
 ## Usage
 
 Open the top-level directory of an sbt project in Atom.
-An interactive sbt session can then be started within Atom using the "Sbt: Toggle Panel" command (`alt-shift-O`).
+You can start an interactive sbt session within Atom using the "Sbt: Toggle Panel" command (`alt-shift-O`).
 This command will open a new terminal panel and run sbt in it.
 
-By default, the sbt package assumes that the sbt script can be invoked as `/usr/local/bin/sbt`.
+By default, the sbt package assumes that you invoke sbt script as `/usr/local/bin/sbt`.
 Use the "sbt Script" setting to specify a different location.
 
-Once the terminal panel has been created, you can interactively invoke sbt commands by typing into the panel.
+Once you've created the terminal panel, you can interactively invoke sbt commands by typing into the panel.
 All interactive sbt commands should work, including cursor movement to access history and TAB to invoke completion.
 
-The terminal panel will be shown each time you run a command so you can see what sbt prints.
+The terminal panel shows each time you run a command so you can see what sbt prints.
 If you prefer not to see the sbt output automatically, turn off the "Show the sbt terminal automatically" setting.
 
 The terminal title will be "sbt" and a description of the project.
-By default, the basename of the main project path will be used as the description (e.g., "myproj" for a project path of "/foo/bar/myproj").
+By default, the description is the basename of the main project path (e.g., "myproj" for a project path of "/foo/bar/myproj").
 If you want to see the full project path, turn on the "Terminal title should show full project path" setting.
 
 If you have changed your sbt prompt from the default, you may need to set the "Prompt Pattern" setting to match your new prompt.
-This setting is used to spot the prompt when resuming interactive use after a continuous execution command (e.g., ~compile) has been interrupted by another command.
+The package uses this pattern to spot the prompt when resuming interactive use after you interrupt a continuous execution command (e.g., ~compile) with another command.
 
 ## History
 
-As well as supporting interactive use, the sbt package has a number of Atom commands to make it easier to send commands to sbt more than once.
-The simplest Atom command allows the most recent sbt command to be submitted again.
+As well as supporting interactive use, the sbt package has Atom commands to make it easier to send sbt commands more than once.
+The simplest Atom command submits the most recent sbt command again.
 
 "Sbt: Run Last Command" (`alt-shift-V`): submit the most recent sbt command again.
 
-For more control over history, the sbt package creates a new Atom command each time a command is submitted to sbt.
+For more control over history, the sbt package creates a new Atom command each time you submit a command to sbt.
 E.g., suppose that the first command that you enter to sbt is "test:compile".
-After you have interactively entered this command, you will find that a new Atom command "Sbt: History 1 test:compile" has been created.
-Thus, you can easily re-send this sbt command using the Atom command palette.
-Each subsequent sbt command entered will get an Atom history command with an incremented count.
+After you have interactively entered this command, you will find a new Atom command "Sbt: History 1 test:compile".
+Thus, you can re-send this sbt command using the Atom command palette.
+Each sbt command entered will get an Atom history command with an incremented count.
 
-If you don't want the history commands to be created, you can turn off the "Create History Commands" package setting.
+If you don't want the history commands, you can turn off the "Create History Commands" package setting.
 
 If you accumulate too much history and want to start again, use this command to start again:
 
@@ -54,14 +54,14 @@ The sbt package also supports automatically adding Atom commands that send parti
 The "Command List" package setting is a comma-separated list of sbt commands that you want to have quick access to.
 The default setting is "clean, compile, exit, run, test".
 
-When it is first loaded, the sbt package will create one Atom command for each sbt command in the "Command List" setting.
-The Atom command will be given a name based on the sbt command.
+When first loaded, the sbt package will create one Atom command for each sbt command in the "Command List" setting.
+The Atom command has a name based on the sbt command.
 For example, if the sbt command is "test" then the Atom command will be  `sbt:test` and it will appear in the command palette as "Sbt: Test".
 Thus, you can invoke the command via the palette, or more usefully, map a key to it.
 
-Some name mangling is performed when the Atom command is created for the history commands or for new user commands.
-Specifically, colons are replaced with hyphens in Atom command names since colon has a special meaning to Atom.
-Colons will be replaced by spaces in the palette string for the command.
+Sbt commands have their names mangled when creating the Atom commands.
+Specifically, hyphens replace colons in Atom command names since colon has a special meaning to Atom.
+Spaces replace colons in the palette string for the command.
 E.g., if the sbt command is "test:compile" then the corresponding Atom command name will be `sbt:test-compile` and it will appear in the palette as "Sbt: Test Compile".
 
 See the Key Bindings section of the package settings for the bindings that invoke the default sbt command list.
@@ -72,7 +72,7 @@ If you issue an sbt command that compiles your code and it generates compiler er
 
 If you have the linter package set to show linter information in the status bar, you should see something like "n issues" where n is the number of compiler errors.
 
-If you have the linter set to show inline error tooltips and/or highlights for error lines in the gutter, you should see those for your errors too.
+If you have the linter set to show inline error tooltips and/or highlights for error lines in the editor gutter, you should see those for your errors too.
 
 Most usefully, you should be able to use the "Linter: Next Error" Atom command (`alt-shift-.` or `alt->`) to cycle through the errors and to go to their locations in your code.
 
@@ -97,7 +97,7 @@ The sbt package needs the path so that it can map the failure to the correct fil
 We assume that the suite and the file with the failing test live in the same directory.
 
 If you want to use this facility you need to augment your suites so that their names include the path information.
-E.g., placing the following code in the suite will produce the output above, assuming that the file is located in the directory given by its package.
+E.g., placing the following code in the suite will produce the output above, assuming that the file resides in the directory given by its package.
 
     override def suiteName = {
         val pkgName = Option(getClass.getPackage).map(_.getName).getOrElse("")
@@ -107,6 +107,6 @@ E.g., placing the following code in the suite will produce the output above, ass
 
 We're aware that this solution is less than ideal.
 If we can convince the ScalaTest maintainers to include this implementation of `suiteName` by default, then we will.
-However, the situation is tricky so we are not confident.
-E.g., the file in which the failure occurs may not actually be in the same directory as the suite, which is assumed above.
+The situation is tricky so we are not confident.
+E.g., the file in which the failure occurs may not actually be in the same directory as the suite, which we assumed above.
 ScalaTest gets the filename from an exception stack trace but Java doesn't provide full paths to files in stack traces, so there is nothing ScalaTest can do.
