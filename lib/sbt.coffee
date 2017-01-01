@@ -183,7 +183,8 @@ module.exports =
       if @waiting
         if new RegExp(atom.config.get('sbt.promptPattern')).exec(data)
           # console.log('waiting and promptPattern')
-          @term.input(@pendingInput)
+          if @pendingInput
+            @term.input(@pendingInput)
           @waiting = false
       isfull = data.endsWith('\n')
       lines = data.replace(/\x1b\[[0-9]+m/g, '').split('\n')
@@ -308,6 +309,7 @@ module.exports =
       if @isRunning(@term)
         @term.toggle()
       else
+        @waiting = true
         sbt = atom.config.get('sbt.script')
         fs.access sbt, fs.X_OK, (err) =>
           if err

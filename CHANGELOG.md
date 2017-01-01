@@ -1,5 +1,7 @@
 ## v0.9.0
-* More robust resuming of interactive commands after interrupting a continuous command
+* New prompt pattern setting used when waiting for the right moment to run a command
+* More robust resumption of interactive commands after interrupting a continuous command
+* Wait to run commands when restarting the terminal (issue 3)
 
 ## v0.8.0
 * Move from terminal-plus to platformio-ide-terminal
