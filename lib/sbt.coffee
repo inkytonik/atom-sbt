@@ -118,10 +118,10 @@ module.exports =
           palette.'
       promptPattern:
         type: 'string'
-        default: '[^>]*> '
-        description: 'A regular expression pattern that matches your sbt
-          prompt. This setting is used to spot the prompt to resume
-          interactive use when a continuous execution command (e.g.,
+        default: '^[^>]*>.*'
+        description: 'A regular expression pattern that matches a line that
+          starts with your sbt prompt. This setting is used to spot the prompt
+          to resume interactive use when a continuous execution command (e.g.,
           ~compile) has been interrupted by another command.'
       script:
         title: 'sbt Script'
