@@ -186,7 +186,7 @@ module.exports =
           @term.input(@pendingInput)
           @waiting = false
       isfull = data.endsWith('\n')
-      lines = data.replace(/\x1b\[[0-9]+m/g, '').trim().split('\n')
+      lines = data.replace(/\x1b\[[0-9]+m/g, '').split('\n')
       if isfull
         @saved = ''
       else
