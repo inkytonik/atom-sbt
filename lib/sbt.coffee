@@ -157,7 +157,7 @@ module.exports =
 
     commandEventName: (cmd) ->
       @cmdcount = @cmdcount + 1
-      return "sbt:history-#{@cmdcount} #{@encodeEventName(cmd)}"
+      "sbt:history-#{@cmdcount} #{@encodeEventName(cmd)}"
 
     deactivate: ->
       @subscriptions?.dispose()
@@ -167,7 +167,7 @@ module.exports =
     encodeEventName: (s) ->
       s = s.replace('-', '\u2010') # HYPHEN
       s = s.replace(':', '\u02D0') # MO­DI­FI­ER LET­TER TRIANGULAR COLON
-      return s
+      s
 
     isRunning: (term) ->
       @tpluspkg.statusBarTile.indexOf(term) != -1
