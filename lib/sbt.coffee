@@ -230,8 +230,6 @@ module.exports =
                 # console.log(@message)
                 @messages.push(@message)
                 @message = null
-              else
-                # do nothing
             when match = @pointerRE.exec(line)
               # console.log('pointerRE')
               if @message? and not(@pkgPath)
@@ -242,15 +240,11 @@ module.exports =
                 # console.log(@message)
                 @messages.push(@message)
                 @message = null
-              else
-                # do nothing
             when match = @errorContRE.exec(line)
               # console.log('errorContRE')
               if @message?
                 # Need errorRE matched earlier
                 @message.text = "#{@message.text}\n#{match[1]}"
-              else
-                # do nothing
             when match = @infoRE.exec(line)
               # console.log('infoRE')
               @info.push(match[1])
