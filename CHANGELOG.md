@@ -2,6 +2,8 @@
 * New prompt pattern setting used when waiting for the right moment to run a command
 * More robust resumption of interactive commands after interrupting a continuous command
 * Wait to run commands when restarting the terminal (issue 3)
+* Do limited processing of ANSI escape sequences when capturing interactive commands for history (issue 1)
+* Properly capture last command when an interactive command comes from history (issue 14) 
 
 ## v0.8.0
 * Move from terminal-plus to platformio-ide-terminal

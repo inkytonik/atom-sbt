@@ -21,7 +21,6 @@ os = require 'os'
 
 module.exports =
   Sbt =
-    cmdbuf : ''
     cmdcount: 0
     cmds: new Set([])
     history: null
@@ -33,6 +32,7 @@ module.exports =
     lastCommand: null
     lineno: null
     linterpkg: null
+    needsEOL: false
     saved: ''
     special: ''
     subscriptions: null
@@ -118,11 +118,12 @@ module.exports =
           palette.'
       promptPattern:
         type: 'string'
-        default: '^[^>]*>.*'
-        description: 'A regular expression pattern that matches a line that
-          starts with your sbt prompt. This setting is used to spot the prompt
-          to resume interactive use when a continuous execution command (e.g.,
-          ~compile) has been interrupted by another command.'
+        default: '^> '
+        description: 'A regular expression matching a line that starts with
+          your sbt prompt. The regular expression should not contain any
+          grouping commands (parentheses). Avoid patterns that match other
+          useful sbt output lines, such as log lines that start with a left
+          square bracket.'
       script:
         title: 'sbt Script'
         type: 'string'
@@ -180,18 +181,19 @@ module.exports =
         @clearMessages()
         @pendingClear = false
       data = @saved + data
-      if @waiting
-        if new RegExp(atom.config.get('sbt.promptPattern')).exec(data)
-          # console.log('waiting and promptPattern')
-          if @pendingInput
-            @term.input(@pendingInput)
-          @waiting = false
+      # console.log("data: |#{data}|")
       isfull = data.endsWith('\n')
       lines = data.replace(/\x1b\[[0-9]+m/g, '').split('\n')
       if isfull
         @saved = ''
       else
         @saved = lines.pop()
+      promptRE = new RegExp("#{atom.config.get('sbt.promptPattern')}(.*)")
+      if @waiting and promptRE.exec(data)
+        @waiting = false
+        if @pendingInput
+          @term.input(@pendingInput)
+          @pendingInput = null
       for line in lines
         do (line) =>
           # console.log(line)
@@ -255,7 +257,13 @@ module.exports =
             when match = @contRE.exec(line)
               # console.log('contRE')
               @pendingClear = true
+              @needsEOL = true
               @waiting = true
+            when match = promptRE.exec(line)
+              # console.log("promptRE #{line}")
+              cmd = @outputToCmd(match[1])
+              @addToHistory(cmd)
+              @clearMessages()
 
     runLastCommand: ->
       if @lastCommand != null
@@ -264,10 +272,11 @@ module.exports =
     runCommand: (cmd) ->
       @clearMessages()
       @showPanel()
-      @addToHistory(cmd)
       input = "#{cmd}#{os.EOL}"
-      if @waiting
+      if @needsEOL
         @term.input(os.EOL)
+        @needsEOL = false
+      if @waiting
         @pendingInput = input
       else
         @term.input(input)
@@ -296,8 +305,6 @@ module.exports =
           @processData(data)
         @term.ptyProcess.on 'platformio-ide-terminal:exit', =>
           @clearMessages()
-        @term.terminal.on 'data', (data) =>
-          @userInput(data)
       if atom.config.get('sbt.showTermAuto') and not(@term.panel.isVisible())
         @term.open()
 
@@ -320,10 +327,47 @@ module.exports =
           else
             @startTerm()
 
-    userInput: (data) ->
-      if data == "\r"
-        @clearMessages()
-        @addToHistory(@cmdbuf)
-        @cmdbuf = ''
-      else
-        @cmdbuf = @cmdbuf + data
+    # Output sequence handling. Horrible but there appears to be
+    # no other way to capture the actual commands executed by sbt.
+
+    cursorBwdRE: /^\x1b\[([0-9]*)D/
+    cursorFwdRE: /^\x1b\[([0-9]*)C/
+    lineEraseRE: /^\x1b\[K/
+
+    argToNum: (arg) ->
+      if arg == '' then 0 else parseInt(arg, 10)
+
+    outputToCmd: (output) ->
+      result = ''
+      respos = 0
+      outpos = 0
+      while outpos < output.length
+        ch = output[outpos]
+        switch
+          when ch == '\x1b'
+            rest = output[outpos..]
+            switch
+              when match = @cursorBwdRE.exec(rest)
+                # console.log("saw backward #{match[1]}")
+                respos = respos - @argToNum(match[1])
+                outpos = outpos + match[0].length
+              when match = @cursorFwdRE.exec(rest)
+                # console.log("saw forward #{match[1]}")
+                respos = respos + @argToNum(match[1])
+                outpos = outpos + match[0].length
+              when match = @lineEraseRE.exec(rest)
+                # console.log("saw line erase of len #{match[0].length}")
+                result = result[0...respos]
+                outpos = outpos + match[0].length
+              else
+                console.log("sbt: unknown esc seq at #{rest}")
+                result = output
+                outpos = output.length
+          when ch == '\b'
+            respos = respos - 1
+            outpos = outpos + 1
+          else
+            result = result[0...respos] + ch
+            respos = respos + 1
+            outpos = outpos + 1
+      result
