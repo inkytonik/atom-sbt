@@ -28,6 +28,7 @@ If you want to see the full project path, turn on the "Terminal title should sho
 
 If you have changed your sbt prompt from the default, you may need to set the "Prompt Pattern" setting to match your new prompt.
 The package uses this pattern to spot the prompt when resuming interactive use after you interrupt a continuous execution command (e.g., ~compile) with another command.
+Commands you enter are also detected by looking for lines that contain your prompt.
 
 ## History
 
