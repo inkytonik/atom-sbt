@@ -275,14 +275,6 @@ module.exports =
       else
         @term.input(input)
 
-    setTitle: (term) ->
-      projPath = atom.project.getPaths()[0]
-      if not atom.config.get('sbt.titleShowsFullPath')
-        projPath = path.basename(projPath)
-      title = "sbt #{projPath}"
-      term.title = title
-      term.statusIcon.updateName(title)
-
     startTerm: ->
       shell = atom.config.get('platformio-ide-terminal.core.shell')
       shellArgs = atom.config.get('platformio-ide-terminal.core.shellArguments')
@@ -320,6 +312,29 @@ module.exports =
                 adjust the sbt Script setting in the sbt package."
           else
             @startTerm()
+
+    # Titles
+
+    changeTitle: (term, title) ->
+      term.title = title
+      term.statusIcon.updateName(title)
+
+    setTitle: (term) ->
+      @changeTitle(term, "sbt")
+      editor = atom.workspace.getActiveTextEditor()
+      filePath = if editor?
+                   editor.getPath()
+                 else
+                   atom.project.getPaths()[0]
+      for dir in atom.workspace.project.getDirectories()
+        dirPath = dir.getPath()
+        if dirPath = filePath or dir.contains(filePath)
+          id =
+            if atom.config.get('sbt.titleShowsFullPath')
+              dirPath
+            else
+              dir.getBaseName()
+          @changeTitle(term, "sbt #{id}")
 
     # Output sequence handling. Horrible but there appears to be
     # no other way to capture the actual commands executed by sbt.
