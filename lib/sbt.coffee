@@ -123,7 +123,8 @@ module.exports =
           your sbt prompt. The regular expression should not contain any
           grouping commands (parentheses). Avoid patterns that match other
           useful sbt output lines, such as log lines that start with a left
-          square bracket.'
+          square bracket. E.g., `^(?!\[)[^>]*>` avoids lines starting with
+          left bracket and matches prompts that end in "> ".'
       script:
         title: 'sbt Script'
         type: 'string'
