@@ -127,11 +127,10 @@ module.exports =
         type: 'string'
         default: '^> '
         description: 'A regular expression matching a line that starts with
-          your sbt prompt. The regular expression should not contain any
-          grouping commands (parentheses). Avoid patterns that match other
-          useful sbt output lines, such as log lines that start with a left
-          square bracket. E.g., `^(?!\[)[^>]*>` avoids lines starting with
-          left bracket and matches prompts that end in "> ".'
+          your sbt prompt. Avoid patterns that match other useful sbt output
+          lines, such as log lines that start with a left square bracket.
+          E.g., `^(?!\[)[^>]*>` avoids lines starting with left bracket and
+          matches prompts that end in `> `.'
       script:
         title: 'sbt Script'
         type: 'string'

@@ -219,7 +219,7 @@ class Project
             @waiting = true
           when match = promptRE.exec(line)
             # console.log("promptRE #{line}")
-            cmd = @outputToCmd(match[1])
+            cmd = @outputToCmd(match[match.length - 1])
             @addToHistory(cmd)
             @clearMessages()
 
