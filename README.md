@@ -11,8 +11,12 @@ inkytonik, Anthony Sloane ([inkytonik@gmail.com](mailto:inkytonik@gmail.com))
 
 Open the top-level directory of an sbt project in Atom.
 You can start an interactive sbt session within Atom using the "Sbt: Toggle Panel" command (`alt-shift-O`).
-This command will open a new terminal panel and run sbt in it.
-You can also open a file in a project and then toggle the sbt panel, in which case the sbt session will be in the project of that file.
+This command will open a new terminal panel.
+sbt will run in the first project of the current Atom window.
+
+You can also open a file in a project and then toggle the sbt panel, in which case the sbt session will be in the project that contains that file.
+
+A single Atom window can contain more than one sbt panel where each one is running in a different project from that window.
 
 By default, the sbt package assumes that you invoke sbt script as `/usr/local/bin/sbt`.
 Use the "sbt Script" setting to specify a different location.
@@ -34,21 +38,21 @@ Commands you enter are also detected by looking for lines that contain your prom
 ## History
 
 As well as supporting interactive use, the sbt package has Atom commands to make it easier to send sbt commands more than once.
-The simplest Atom command submits the most recent sbt command again.
+The simplest Atom command re-submits the most recent sbt command of the current project.
 
-"Sbt: Run Last Command" (`alt-shift-V`): submit the most recent sbt command again.
+"Sbt: Run Last Command" (`alt-shift-V`): re-submit the most recent sbt command of the current project.
 
 For more control over history, the sbt package creates a new Atom command each time you submit a command to sbt.
-E.g., suppose that the first command that you enter to sbt is "test:compile".
-After you have interactively entered this command, you will find a new Atom command "Sbt: History 1 test:compile".
-Thus, you can re-send this sbt command using the Atom command palette.
+E.g., suppose that the first command that you enter to sbt in project "mytool" is "test:compile".
+After you have interactively entered this command, you will find a new Atom command "Sbt: History 1 mytool test:compile".
+Thus, you can re-send sbt commands by using the Atom command palette to match on the count, the project name or the command text.
 Each sbt command entered will get an Atom history command with an incremented count.
 
 If you don't want the history commands, you can turn off the "Create History Commands" package setting.
 
 If you accumulate too much history and want to start again, use this command to start again:
 
-"Sbt: Clear History": clear the history commands.
+"Sbt: Clear History": clear the history commands for the current sbt project.
 
 ## Adding new commands
 
