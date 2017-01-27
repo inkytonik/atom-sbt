@@ -69,6 +69,7 @@ class Project
       @term.ptyProcess.on 'platformio-ide-terminal:exit', =>
         @clearHistory()
         @clearMessages()
+        @term = null
     @showPanel()
 
   setTitle: ->
