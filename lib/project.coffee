@@ -67,6 +67,7 @@ class Project
       @term.ptyProcess.on 'platformio-ide-terminal:data', (data) =>
         @processData(data)
       @term.ptyProcess.on 'platformio-ide-terminal:exit', =>
+        @clearHistory()
         @clearMessages()
     @showPanel()
 
