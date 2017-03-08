@@ -142,7 +142,7 @@ class Project
 
   processData: (data) ->
     if @pendingClear
-      @clearMessages(project)
+      @clearMessages()
       @pendingClear = false
     data = @saved + data
     # console.log("data: |#{data}|")
