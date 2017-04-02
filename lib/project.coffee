@@ -37,15 +37,8 @@ class Project
   term: null
   waiting: false
 
-  constructor: (@projectPath, @tpluspkg, @linter) ->
+  constructor: (@id, @title, @linter, @tpluspkg) ->
     @history = new CompositeDisposable
-    @id = path.basename(@projectPath)
-    baseTitle =
-      if atom.config.get('sbt.titleShowsFullPath')
-        @projectPath
-      else
-        @id
-    @title = "sbt #{baseTitle}"
 
   # Terminal panel management
 

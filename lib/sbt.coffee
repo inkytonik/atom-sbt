@@ -15,6 +15,7 @@
 
 {CompositeDisposable} = require 'atom'
 Project = require './project'
+path = require 'path'
 
 module.exports =
   Sbt =
@@ -74,8 +75,7 @@ module.exports =
       @subscriptions = @projects = null
 
     consumeIndie: (registerIndie) ->
-      @linter = registerIndie({name: 'sbt'})
-      @subscriptions.add(@linter)
+      @registerIndie = registerIndie
 
     # Projects
 
@@ -98,7 +98,16 @@ module.exports =
     getOrMakeCurrentProject: ->
       projectPath = @getProjectPathOfCurrentFile()
       if not @projects[projectPath]
-        @projects[projectPath] = new Project(projectPath, @tpluspkg, @linter)
+        id = path.basename(projectPath)
+        baseTitle =
+          if atom.config.get('sbt.titleShowsFullPath')
+            projectPath
+          else
+            id
+        title = "sbt #{baseTitle}"
+        linter = @registerIndie({name: title})
+        @subscriptions.add(linter)
+        @projects[projectPath] = new Project(id, title, linter, @tpluspkg)
       @projects[projectPath]
 
     # Configuration
