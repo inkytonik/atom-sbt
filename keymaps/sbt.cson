@@ -6,4 +6,4 @@
   'alt-shift-V': 'sbt:run-last-command'
   'alt-shift-X': 'sbt:exit'
   'alt-shift-Z': 'sbt:clean'
-  'alt->':       'linter:next-error'
+  'alt->':       'linter-ui-default:next-error'

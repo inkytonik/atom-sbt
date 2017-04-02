@@ -135,7 +135,7 @@ class Project
 
   clearMessages: ->
     @messages = []
-    @linter.setMessages([])
+    @linter.setAllMessages([])
 
   parseLineNo: (str) ->
     parseInt(str, 10) - 1
@@ -164,16 +164,24 @@ class Project
         switch
           when @finalRE.exec(line)
             # console.log('finalRE')
-            @linter.setMessages(@messages)
+            @linter.setAllMessages(@messages)
             @pkgPath = null
           when match = @errorRE.exec(line)
             # console.log('errorRE')
             @lineno = @parseLineNo(match[2])
-            @message = {type: 'Error', text: match[3], filePath: match[1]}
+            @message = {
+              severity: 'error',
+              location: {file: match[1]},
+              excerpt: match[3]
+            }
           when match = @warnRE.exec(line)
             # console.log('warnRE')
             @lineno = @parseLineNo(match[2])
-            @message = {type: 'Warning', text: match[3], filePath: match[1]}
+            @message = {
+              severity: 'warning',
+              location: {file: match[1]},
+              excerpt: match[3]
+            }
           when match = @testnameRE.exec(line)
             # console.log('testnameRE')
             projpath = atom.project.getPaths()[0]
@@ -181,16 +189,21 @@ class Project
             @info = []
           when match = @failRE.exec(line)
             # console.log('failRE')
-            @message = {type: 'Error', text: match[1]}
+            @message = {
+              severity: 'error',
+              excerpt: match[1]
+            }
           when match = @testRE.exec(line)
             # console.log('testRE')
             if @message? and @pkgPath?
               # Needs testnameRE and failRE to have matched earlier
               @lineno = @parseLineNo(match[3])
-              @infolines = @info.join('\n')
-              @message.text = "#{@message.text}\n#{@infolines}\n#{match[1]}"
-              @message.range = [[@lineno, 1], [@lineno + 1, 1]]
-              @message.filePath = "#{@pkgPath}/#{match[2]}"
+              @extra = @info.join('\n')
+              @message.excerpt = "#{@message.excerpt}\n#{@extra}\n#{match[1]}"
+              @message.location = {
+                file: "#{@pkgPath}/#{match[2]}",
+                position: [[@lineno, 1], [@lineno + 1, 1]]
+              }
               # console.log(@message)
               @messages.push(@message)
               @message = null
@@ -200,7 +213,7 @@ class Project
               # Needs errorRE or warnRE to have matched earlier
               # Avoid matching pointer lines in test output
               colno = match[1].length
-              @message.range = [[@lineno, colno], [@lineno, colno]]
+              @message.location.position = [[@lineno, colno], [@lineno, colno]]
               # console.log(@message)
               @messages.push(@message)
               @message = null
@@ -208,7 +221,7 @@ class Project
             # console.log('errorContRE')
             if @message?
               # Need errorRE matched earlier
-              @message.text = "#{@message.text}\n#{match[1]}"
+              @message.excerpt = "#{@message.excerpt}\n#{match[1]}"
           when match = @infoRE.exec(line)
             # console.log('infoRE')
             @info.push(match[1])

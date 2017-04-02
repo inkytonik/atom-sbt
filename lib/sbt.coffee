@@ -73,8 +73,8 @@ module.exports =
       @projects?.dispose()
       @subscriptions = @projects = null
 
-    consumeLinter: (indieRegistry) ->
-      @linter = indieRegistry.register({name: 'sbt'})
+    consumeIndie: (registerIndie) ->
+      @linter = registerIndie({name: 'sbt'})
       @subscriptions.add(@linter)
 
     # Projects
