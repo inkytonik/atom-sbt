@@ -22,6 +22,7 @@ module.exports =
     busyProvider: null
     linterpkg: null
     projects: {}
+    registerIndie: null
     subscriptions: null
     tpluspkg: null
 
