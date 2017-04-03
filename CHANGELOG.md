@@ -7,6 +7,7 @@
 * More robust resumption of interactive commands after interrupting a continuous command
 * Wait to run commands when restarting the terminal (issue 3)
 * Do limited processing of ANSI escape sequences when capturing interactive commands for history (issue 1)
+* Add support for Busy Signal to show when sbt commands are running
 
 ## v0.8.0
 * Move from terminal-plus to platformio-ide-terminal

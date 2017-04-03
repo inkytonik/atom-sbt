@@ -19,6 +19,7 @@ path = require 'path'
 
 module.exports =
   Sbt =
+    busyProvider: null
     linterpkg: null
     projects: {}
     subscriptions: null
@@ -77,6 +78,10 @@ module.exports =
     consumeIndie: (registerIndie) ->
       @registerIndie = registerIndie
 
+    consumeSignal: (registry) ->
+      @busyProvider = registry.create()
+      @subscriptions.add(@busyProvider)
+
     # Projects
 
     getProjectPathOfCurrentFile: ->
@@ -107,7 +112,8 @@ module.exports =
         title = "sbt #{baseTitle}"
         linter = @registerIndie({name: title})
         @subscriptions.add(linter)
-        @projects[projectPath] = new Project(id, title, linter, @tpluspkg)
+        @projects[projectPath] =
+          new Project(id, title, linter, @busyProvider, @tpluspkg)
       @projects[projectPath]
 
     # Configuration

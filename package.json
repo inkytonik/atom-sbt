@@ -41,6 +41,11 @@
       "versions": {
         "2.0.0": "consumeIndie"
       }
+    },
+    "busy-signal": {
+      "versions": {
+        "1.0.0": "consumeSignal"
+      }
     }
   }
 }

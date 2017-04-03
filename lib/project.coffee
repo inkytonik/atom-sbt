@@ -37,7 +37,7 @@ class Project
   term: null
   waiting: false
 
-  constructor: (@id, @title, @linter, @tpluspkg) ->
+  constructor: (@id, @title, @linter, @busyProvider, @tpluspkg) ->
     @history = new CompositeDisposable
 
   # Terminal panel management
@@ -146,11 +146,13 @@ class Project
     else
       @saved = lines.pop()
     promptRE = new RegExp("#{atom.config.get('sbt.promptPattern')}(.*)")
-    if @waiting and promptRE.exec(data)
-      @waiting = false
-      if @pendingInput
-        @term.input(@pendingInput)
-        @pendingInput = null
+    if promptRE.exec(data)
+      @busyProvider.clear()
+      if @waiting
+        @waiting = false
+        if @pendingInput
+          @term.input(@pendingInput)
+          @pendingInput = null
     for line in lines
       do (line) =>
         # console.log(line)
@@ -228,6 +230,7 @@ class Project
             cmd = @outputToCmd(match[match.length - 1])
             @addToHistory(cmd)
             @clearMessages()
+            @busyProvider.add("#{@title}: #{cmd}")
 
   cursorBwdRE: /^\x1b\[([0-9]*)D/
   cursorFwdRE: /^\x1b\[([0-9]*)C/
