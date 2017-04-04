@@ -46,6 +46,7 @@ class Project
     @tpluspkg.statusBarTile.indexOf(@term) != -1
 
   startTerm: ->
+    @busyProvider.add("#{@title}: starting sbt")
     shell = atom.config.get('platformio-ide-terminal.core.shell')
     shellArgs = atom.config.get('platformio-ide-terminal.core.shellArguments')
     sbt = atom.config.get('sbt.script')
