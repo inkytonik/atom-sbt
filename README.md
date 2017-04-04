@@ -7,6 +7,14 @@ It uses the [PlatformIO IDE Terminal](https://atom.io/packages/platformio-ide-te
 
 inkytonik, Anthony Sloane ([inkytonik@gmail.com](mailto:inkytonik@gmail.com))
 
+## Non-standard sbt prompts
+
+If you have changed your sbt prompt from the default, you will probably need to set the "Prompt Pattern" setting to match your prompt.
+The package uses this pattern to spot the prompt when resuming interactive use after you interrupt a continuous execution command (e.g., ~compile) with another command.
+Commands you enter interactively are also detected by looking for lines that contain your prompt.
+Similarly, the busy signal support uses prompt matching to detect when commands are running.
+So if any of these features are not working correctly, please check your pormpt pattern.
+
 ## Usage
 
 Open the top-level directory of an sbt project in Atom.
@@ -30,10 +38,6 @@ If you prefer not to see the sbt output automatically, turn off the "Show the sb
 The terminal title will be "sbt" and a description of the project.
 By default, the description is the basename of the main project path (e.g., "myproj" for a project path of "/foo/bar/myproj").
 If you want to see the full project path, turn on the "Terminal title should show full project path" setting.
-
-If you have changed your sbt prompt from the default, you may need to set the "Prompt Pattern" setting to match your new prompt.
-The package uses this pattern to spot the prompt when resuming interactive use after you interrupt a continuous execution command (e.g., ~compile) with another command.
-Commands you enter are also detected by looking for lines that contain your prompt.
 
 ## History
 

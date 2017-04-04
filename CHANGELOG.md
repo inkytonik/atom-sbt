@@ -1,8 +1,8 @@
 ## v0.9.0
+* New prompt pattern setting is used when waiting for the right moment to run a command. You will almost certainly need to set this if you use a non-standard sbt prompt.
 * Move to Linter package V2 (issue 16)
 * Support more than one sbt project panel in a single Atom window (issue 10)
 * User per-project linters instead one linter per window (issue 10)
-* New prompt pattern setting is used when waiting for the right moment to run a command
 * Properly capture last command when an interactive command comes from history (issue 14)
 * More robust resumption of interactive commands after interrupting a continuous command
 * Wait to run commands when restarting the terminal (issue 3)
