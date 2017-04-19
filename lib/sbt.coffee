@@ -145,7 +145,7 @@ module.exports =
         description: 'A regular expression matching a line that starts with
           your sbt prompt. Avoid patterns that match other useful sbt output
           lines, such as log lines that start with a left square bracket.
-          E.g., `^(?!\[)[^>]*>` avoids lines starting with left bracket and
+          E.g., `^(?!\[)[^>]*> ` avoids lines starting with left bracket and
           matches prompts that end in `> `.'
       script:
         title: 'sbt Script'
