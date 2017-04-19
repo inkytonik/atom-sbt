@@ -23,6 +23,12 @@ module.exports =
     linterpkg: null
     projects: {}
     registerIndie: null
+    startupMessage: 'The sbt package looks for the interactive
+      sbt prompt to identify commands in the output. Out of the
+      box the package assumes the default prompt is being used.
+      If you have changed the prompt from the default, you should
+      check that the package\'s prompt pattern setting is
+      correct.'
     subscriptions: null
     tpluspkg: null
 
@@ -33,6 +39,25 @@ module.exports =
       apd = require('atom-package-deps')
       apd.install().then =>
         @activateProperly()
+      if atom.config.get('sbt.showStartupMessage')
+        @startupNotification =
+          atom.notifications.addInfo 'sbt package startup message', {
+            buttons: [
+              {
+                text: 'Open sbt package settings'
+                onDidClick: ->
+                  atom.workspace.open('atom://config/packages/sbt')
+              }
+              {
+                text: 'Don\'t show this message again'
+                onDidClick: =>
+                  atom.config.set('sbt.showStartupMessage', false)
+                  @startupNotification.dismiss()
+              }
+            ]
+            detail: @startupMessage
+            dismissable: true
+          }
 
     activateProperly: ->
       @linterpkg = @activatePackage('linter')
@@ -152,6 +177,14 @@ module.exports =
         type: 'string'
         description: 'The filename of the sbt script.'
         default: '/usr/local/bin/sbt'
+      showStartupMessage:
+        title: 'Show the sbt package startup message when activated'
+        type: 'boolean'
+        default: true
+        description: 'The startup message displays important information
+          that helps you to get the sbt package working when you first
+          start using it. Normally you will not need to see the message
+          more than once.'
       showTermAuto:
         title: 'Show the sbt terminal automatically'
         type: 'boolean'
