@@ -1,4 +1,4 @@
-## 0.10.0
+## v0.10.0
 - Fixed bad example of prompt pattern regular expression (missing escape)
 
 ## v0.9.0
