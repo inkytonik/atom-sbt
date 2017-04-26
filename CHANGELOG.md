@@ -1,3 +1,6 @@
+## 0.10.0
+- Fixed bad example of prompt pattern regular expression (missing escape)
+
 ## v0.9.0
 * New prompt pattern setting is used when waiting for the right moment to run a command. You will almost certainly need to set this if you use a non-standard sbt prompt.
 * Move to Linter package V2 (issue 16)
