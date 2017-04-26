@@ -1,4 +1,5 @@
 ## v0.10.0
+- Update busy signal for each separate command run by a continuous command
 - Fixed bad example of prompt pattern regular expression (missing escape)
 
 ## v0.9.0

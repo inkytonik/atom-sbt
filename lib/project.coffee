@@ -138,6 +138,7 @@ class Project
     if @pendingClear
       @clearMessages()
       @pendingClear = false
+      @busyProvider.add("#{@title}: #{@lastCommand}")
     data = @saved + data
     # console.log("data: |#{data}|")
     isfull = data.endsWith('\n')
@@ -161,6 +162,7 @@ class Project
           when @finalRE.exec(line)
             # console.log('finalRE')
             @linter.setAllMessages(@messages)
+            @busyProvider.clear()
             @pkgPath = null
           when match = @errorRE.exec(line)
             # console.log('errorRE')
@@ -226,6 +228,7 @@ class Project
             @pendingClear = true
             @needsEOL = true
             @waiting = true
+            @busyProvider.clear()
           when match = promptRE.exec(line)
             # console.log("promptRE #{line}")
             cmd = @outputToCmd(match[match.length - 1])
