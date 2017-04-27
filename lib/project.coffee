@@ -61,9 +61,7 @@ class Project
       @term.ptyProcess.on 'platformio-ide-terminal:data', (data) =>
         @processData(data)
       @term.ptyProcess.on 'platformio-ide-terminal:exit', =>
-        @clearHistory()
-        @clearMessages()
-        @term = null
+        @stopTerm()
     @showPanel()
 
   setTitle: ->
@@ -91,6 +89,12 @@ class Project
               adjust the sbt Script setting in the sbt package."
         else
           @startTerm()
+
+  stopTerm: ->
+    @clearHistory()
+    @clearMessages()
+    @busyProvider.clear()
+    @term = null
 
   # Command execution
 
