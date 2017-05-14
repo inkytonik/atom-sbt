@@ -33,6 +33,7 @@
     "atom-package-deps": ">=4.0.1"
   },
   "package-deps": [
+    "busy-signal",
     "linter",
     "platformio-ide-terminal"
   ],
