@@ -1,3 +1,7 @@
+## v0.11.0
+- Declare dependency on busy-signal package
+- Recover gracefully if the prompt pattern regular expression is bad
+
 ## v0.10.0
 - Fixed bad example of prompt pattern regular expression (missing escape)
 - Update busy signal for each separate command run by a continuous command

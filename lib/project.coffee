@@ -138,6 +138,20 @@ class Project
   parseLineNo: (str) ->
     parseInt(str, 10) - 1
 
+  getPromptRE: ->
+    pattern = atom.config.get('sbt.promptPattern')
+    try
+      return new RegExp("#{pattern}(.*)")
+    catch error
+      if error instanceof SyntaxError
+        atom.notifications.addError 'sbt prompt pattern syntax error', {
+          detail: "The pattern \"#{pattern}\" is not a legal regular expression.
+            Please fix the prompt pattern setting for the sbt package, exit the
+            terminal and start another one."
+          dismissable: true
+        }
+        return new RegExp('^> ')
+
   processData: (data) ->
     if @pendingClear
       @clearMessages()
@@ -151,7 +165,7 @@ class Project
       @saved = ''
     else
       @saved = lines.pop()
-    promptRE = new RegExp("#{atom.config.get('sbt.promptPattern')}(.*)")
+    promptRE = @getPromptRE()
     if promptRE.exec(data)
       @busyProvider.clear()
       if @waiting
