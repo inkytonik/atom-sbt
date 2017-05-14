@@ -1,7 +1,8 @@
 ## v0.11.0
 - Declare dependency on busy-signal package (issue 18)
-- Recover gracefully if the prompt pattern regular expression is bad
+- Don’t clear messages until new ones are ready so work can continue while building (issue 19)
 - Properly handle grouping when augmenting prompt pattern (issue 20)
+- Recover gracefully if the prompt pattern regular expression is bad
 
 ## v0.10.0
 - Fixed bad example of prompt pattern regular expression (missing escape)

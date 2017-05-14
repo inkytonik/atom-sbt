@@ -103,7 +103,6 @@ class Project
       @runCommand(@lastCommand)
 
   runCommand: (cmd) ->
-    @clearMessages()
     @showPanel()
     input = "#{cmd}#{os.EOL}"
     if @needsEOL
@@ -133,7 +132,7 @@ class Project
 
   clearMessages: ->
     @messages = []
-    @linter.setAllMessages([])
+    @linter.clearMessages()
 
   parseLineNo: (str) ->
     parseInt(str, 10) - 1
@@ -154,7 +153,6 @@ class Project
 
   processData: (data) ->
     if @pendingClear
-      @clearMessages()
       @pendingClear = false
       @busyProvider.add("#{@title}: #{@lastCommand}")
     data = @saved + data
@@ -180,6 +178,7 @@ class Project
           when @finalRE.exec(line)
             # console.log('finalRE')
             @linter.setAllMessages(@messages)
+            @messages = []
             @busyProvider.clear()
             @pkgPath = null
           when match = @errorRE.exec(line)
@@ -251,7 +250,6 @@ class Project
             # console.log("promptRE #{line}")
             cmd = @outputToCmd(match[match.length - 1])
             @addToHistory(cmd)
-            @clearMessages()
             @busyProvider.add("#{@title}: #{cmd}")
 
   cursorBwdRE: /^\x1b\[([0-9]*)D/
