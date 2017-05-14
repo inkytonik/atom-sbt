@@ -150,7 +150,7 @@ class Project
             terminal and start another one."
           dismissable: true
         }
-        return new RegExp('^> ')
+        return new RegExp('^> (.*)')
 
   processData: (data) ->
     if @pendingClear
