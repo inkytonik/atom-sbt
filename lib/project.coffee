@@ -141,7 +141,7 @@ class Project
   getPromptRE: ->
     pattern = atom.config.get('sbt.promptPattern')
     try
-      return new RegExp("#{pattern}(.*)")
+      return new RegExp("(#{pattern})(.*)")
     catch error
       if error instanceof SyntaxError
         atom.notifications.addError 'sbt prompt pattern syntax error', {
