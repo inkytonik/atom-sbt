@@ -37,7 +37,7 @@ module.exports =
     activate: (state) ->
       @subscriptions = new CompositeDisposable
       apd = require('atom-package-deps')
-      apd.install().then =>
+      apd.install('sbt').then =>
         @activateProperly()
       if atom.config.get('sbt.showStartupMessage')
         @startupNotification =
