@@ -115,20 +115,20 @@ class Project
 
   # Output processing
 
-  finalRE: /^\[.*\] Total time/
+  finalRE: /\[.*\] Total time/
 
-  errorRE: /^\[error\] ([^:]+):([0-9]+): (.*)/
-  errorContRE: /^\[error\] ([^\^]*)/
-  warnRE: /^\[warn\] ([^:]+):([0-9]+): (.*)/
-  pointerRE: /^\[.*\] ( *)\^/
+  errorRE: /\[error\] ([^:]+):([0-9]+): (.*)/
+  errorContRE: /\[error\] ([^\^]*)/
+  warnRE: /\[warn\] ([^:]+):([0-9]+): (.*)/
+  pointerRE: /\[.*\] ( *)\^/
 
   contRE:
-    /^[0-9]+\. Waiting for source changes\.\.\. \(press enter to interrupt\)/
+    /[0-9]+\. Waiting for source changes\.\.\. \(press enter to interrupt\)/
 
-  testnameRE: /^\[info\] \w+ in (.*):/
-  failRE: /^\[info\] - (.*) \*\*\* FAILED \*\*\*/
-  infoRE: /^\[info\]   (.*)/
-  testRE: /^\[info\]   (.*) \(([^:]+):([0-9]+)\)/
+  testnameRE: /\[info\] \w+ in (.*):/
+  failRE: /\[info\] - (.*) \*\*\* FAILED \*\*\*/
+  infoRE: /\[info\]   (.*)/
+  testRE: /\[info\]   (.*) \(([^:]+):([0-9]+)\)/
 
   clearMessages: ->
     @messages = []

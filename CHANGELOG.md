@@ -1,3 +1,6 @@
+## v0.12.0
+- Make pattern matching less strict to cope with message variance caused by some plugins (eg Coursier) (issue 22)
+
 ## v0.11.0
 - Declare dependency on busy-signal package (issue 18)
 - Don’t clear messages until new ones are ready so work can continue while building (issue 19)
