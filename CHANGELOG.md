@@ -1,4 +1,7 @@
 ## v0.12.0
+- Ignore column numbers in sbt 1.x error and warning messages
+
+## v0.12.0
 - Make pattern matching less strict to cope with message variance caused by some plugins (eg Coursier) (issue 22)
 
 ## v0.11.0
