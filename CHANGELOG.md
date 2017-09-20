@@ -1,4 +1,4 @@
-## v0.12.0
+## v0.13.0
 - Ignore column numbers in sbt 1.x error and warning messages
 
 ## v0.12.0
