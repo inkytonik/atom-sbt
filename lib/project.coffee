@@ -117,9 +117,9 @@ class Project
 
   finalRE: /\[.*\] Total time/
 
-  errorRE: /\[error\] ([^:]+):([0-9]+): (.*)/
+  errorRE: /\[error\] ([^:]+):([0-9]+):([0-9]+:)? (.*)/
   errorContRE: /\[error\] ([^\^]*)/
-  warnRE: /\[warn\] ([^:]+):([0-9]+): (.*)/
+  warnRE: /\[warn\] ([^:]+):([0-9]+):([0-9]+:)? (.*)/
   pointerRE: /\[.*\] ( *)\^/
 
   contRE:
@@ -187,7 +187,7 @@ class Project
             @message = {
               severity: 'error',
               location: {file: match[1]},
-              excerpt: match[3]
+              excerpt: match[4]
             }
           when match = @warnRE.exec(line)
             # console.log('warnRE')
@@ -195,7 +195,7 @@ class Project
             @message = {
               severity: 'warning',
               location: {file: match[1]},
-              excerpt: match[3]
+              excerpt: match[4]
             }
           when match = @testnameRE.exec(line)
             # console.log('testnameRE')
